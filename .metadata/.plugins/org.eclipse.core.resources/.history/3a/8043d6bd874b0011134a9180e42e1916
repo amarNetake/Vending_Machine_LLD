@@ -1,0 +1,133 @@
+package entities;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import enums.Coin;
+import observers.DisplayPanel;
+import observers.VendingMachineObserver;
+import observers.VendingMachineSubject;
+import states.IdleState;
+import states.VendingMachineState;
+
+public class VendingMachine implements VendingMachineSubject{
+	
+	private Inventory inventory = new Inventory();
+	private List<VendingMachineObserver> observers = new ArrayList<>();
+	private static VendingMachine vendingMachine;
+	private VendingMachineState currentState = new IdleState();
+	private Item selectedItem;
+	private int balance = 0;
+	
+	private VendingMachine() {}
+	
+	public static VendingMachine getInstance() {
+		if(vendingMachine==null) {
+			synchronized(VendingMachine.class) {
+				if(vendingMachine==null) {
+					vendingMachine = new VendingMachine();
+					vendingMachine.addObserver(new DisplayPanel());
+				}
+			}
+		}
+		return vendingMachine;
+	}
+	
+	public void addSlot(Slot slot) {
+		vendingMachine.getInventory().addSlot(slot);
+	}
+	
+	public void setState(VendingMachineState nextState) {
+		vendingMachine.setCurrentState(nextState);
+	}
+	
+	public void selectItem(String slotId) {
+		if(inventory.getInventory().containsKey(slotId)==false) return;
+		currentState.selectItem(vendingMachine, slotId);
+	}
+	
+	public void insertAmount(Coin coin) {
+		currentState.insertAmount(vendingMachine, coin);
+	}
+	
+	public void dispenseItem() {
+		currentState.dispenseItem(vendingMachine);
+	}
+	
+	public void cancelTransaction() {
+		currentState.cancelTransaction(vendingMachine);
+	}
+
+	@Override
+	public void addObserver(VendingMachineObserver observer) {
+		if(!vendingMachine.getObservers().contains(observer)) vendingMachine.getObservers().add(observer);
+	}
+
+	@Override
+	public void removeObserver(VendingMachineObserver observer) {
+		if(vendingMachine.getObservers().contains(observer)) vendingMachine.getObservers().remove(observer);
+		
+	}
+	@Override
+	public void notifyAllObservers() {
+		for(VendingMachineObserver observer: vendingMachine.observers) {
+			observer.onEvent(vendingMachine);
+		}
+		
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+	
+	public boolean isAvailable(String slotId) {
+		return vendingMachine.getInventory().isItemAvailable(slotId);
+	}
+
+	public void setInventory(Inventory inventory) {
+		vendingMachine.inventory = inventory;
+	}
+
+	public List<VendingMachineObserver> getObservers() {
+		return observers;
+	}
+
+	public void setObservers(List<VendingMachineObserver> observers) {
+		vendingMachine.observers = observers;
+	}
+
+	public static VendingMachine getVendingMachine() {
+		return vendingMachine;
+	}
+
+	public static void setVendingMachine(VendingMachine vendingMachine) {
+		VendingMachine.vendingMachine = vendingMachine;
+	}
+
+	public VendingMachineState getCurrentState() {
+		return currentState;
+	}
+
+	public void setCurrentState(VendingMachineState currentState) {
+		vendingMachine.currentState = currentState;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		vendingMachine.balance = balance;
+	}
+
+	public Item getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(Item selectedItem) {
+		vendingMachine.selectedItem = selectedItem;
+	}
+	
+	
+	
+}

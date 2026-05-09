@@ -1,0 +1,117 @@
+package entities;
+
+import java.util.List;
+
+import enums.Coin;
+import observers.VendingMachineObserver;
+import observers.VendingMachineSubject;
+import states.IdleState;
+import states.VendingMachineState;
+
+public class VendingMachine implements VendingMachineSubject{
+	
+	private Inventory inventory = new Inventory();
+	private List<VendingMachineObserver> observers;
+	private static VendingMachine vendingMachine;
+	private VendingMachineState currentState = new IdleState();
+	private int balance = 0;
+	
+	private VendingMachine() {}
+	
+	public static VendingMachine getInstance() {
+		if(vendingMachine==null) {
+			synchronized(VendingMachine.class) {
+				if(vendingMachine==null) {
+					vendingMachine = new VendingMachine();
+				}
+			}
+		}
+		return vendingMachine;
+	}
+	
+	public void setState(VendingMachineState nextState) {
+		vendingMachine.setCurrentState(nextState);
+	}
+	
+	public void selectItem(String slotId) {
+		if(inventory.getInventory().containsKey(slotId)==false) return;
+		currentState.selectItem(vendingMachine, slotId);
+	}
+	
+	public void insertAmount(Coin coin) {
+		currentState.insertAmount(vendingMachine, coin);
+	}
+	
+	public void dispenseItem() {
+		currentState.dispenseItem(vendingMachine);
+	}
+	
+	public void cancelTransaction() {
+		currentState.cancelTransaction(vendingMachine);
+	}
+
+	@Override
+	public void addObserver(VendingMachineObserver observer) {
+		if(!observers.contains(observer)) observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(VendingMachineObserver observer) {
+		if(observers.contains(observer)) observers.remove(observer);
+		
+	}
+	@Override
+	public void notifyAllObservers() {
+		for(VendingMachineObserver observer: observers) {
+			observer.onEvent(vendingMachine);
+		}
+		
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+	
+	public boolean isAvailable(String slotId) {
+		return vendingMachine.getInventory().isItemAvailable(slotId);
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
+
+	public List<VendingMachineObserver> getObservers() {
+		return observers;
+	}
+
+	public void setObservers(List<VendingMachineObserver> observers) {
+		this.observers = observers;
+	}
+
+	public static VendingMachine getVendingMachine() {
+		return vendingMachine;
+	}
+
+	public static void setVendingMachine(VendingMachine vendingMachine) {
+		VendingMachine.vendingMachine = vendingMachine;
+	}
+
+	public VendingMachineState getCurrentState() {
+		return currentState;
+	}
+
+	public void setCurrentState(VendingMachineState currentState) {
+		this.currentState = currentState;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+	
+	
+	
+}

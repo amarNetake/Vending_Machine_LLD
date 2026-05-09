@@ -1,0 +1,11 @@
+package client;
+
+import entities.VendingMachine;
+
+public class VendingMachineDemo {
+	public static void main(String[] args) {
+		VendingMachine vendingMachine = VendingMachine.getInstance();
+		
+		
+	}
+}

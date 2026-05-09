@@ -1,0 +1,34 @@
+package entities;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Inventory {
+	private final Map<String, Slot> inventory = new HashMap<>();
+	
+	public Item getItem(String slotId) {
+		if(!this.isItemAvailable(slotId)) return null;
+		else return inventory.get(slotId).getItem();
+	}
+
+	public boolean isItemAvailable(String slotId) {
+		if(inventory.get(slotId).getQuantity()==0) return false;
+		return true;
+	}
+	
+	public void addSlot(Slot slot) {
+		inventory.computeIfAbsent(slot.getSlotId(), (k)-> slot);
+	}
+
+	public void restock(String slotId, int quantity) {
+		int currentQuantity = inventory.get(slotId).getQuantity();
+		int slotCapacity = inventory.get(slotId).getCapacity();
+		int finalQuantity = slotCapacity >= quantity+currentQuantity?(quantity+currentQuantity):slotCapacity;
+		inventory.get(slotId).setQuantity(finalQuantity);
+	}
+
+	public Map<String, Slot> getInventory() {
+		return inventory;
+	}
+	
+}

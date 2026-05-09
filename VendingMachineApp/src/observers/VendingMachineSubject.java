@@ -1,0 +1,7 @@
+package observers;
+
+public interface VendingMachineSubject {
+	void addObserver(VendingMachineObserver observer);
+	void removeObserver(VendingMachineObserver observer);
+	void notifyAllObservers();
+}

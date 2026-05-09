@@ -1,0 +1,129 @@
+@startuml
+
+class VendingMachine{
+  -inventory: Inventory
+  -currentState: VendingMachineState
+  -balance: int
+  -observers : List<VendingMachineObserver>
+  +setState(vendingMachineState: VendingMachineState): void
+  +selectItem(String slotId) : void
+  +insertMoney(int amount) : void
+  +dispenseItem() : boolean
+  +cancelTrnsaction() : void
+  +checkAvailability(String slotId) : boolean
+  +notifyAll() : void
+  +addObserver(VendingMachineObserver observer) : void
+  +removeObserver(VendingMachineObserver observer) : void
+  +addSlot(Slot slot) : void
+}
+
+
+class Item{
+    -itemId : String
+    -itemName : String
+    -cost : int
+    +getItemId()
+    +getItemName()
+    +getCost()
+}
+
+class Slot{
+    -slotId: String
+    -capacity: int
+    -item: Item
+    -quantity: int
+    +getSlotId(): String
+    +getCapacity(): int
+    +getItem(): Item
+    +getQuantity(): int
+    +isAvailable(): boolean
+}
+
+class Inventory{
+    -inventory: Map<String,Slot> 
+    + getItem(String slotId): Item
+    + restock(String slotId, int quantity) : boolean
+    + isAvailable(String slotId) : boolean
+    + addSlot(Slot slot) : void
+}
+
+Inventory "1" *.. "many" Slot
+
+class VendingMachineDemo{
+
+}
+
+Item "1" --o "many" Slot
+
+interface VendingMachineState{
+    +void selectItem(vendingMachine: VendingMachine, String slotId)
+    +void insertMoney(vendingMachine: VendingMachine, int amount)
+    +boolean dispenseItem(vendingMachine: VendingMachine)
+    +void cancelTransaction(vendingMachine: VendingMachine)
+    +getStatus() : MachineStatus
+}
+
+VendingMachine o-- VendingMachineState
+
+class IdleState {
+
+}
+
+class ItemSelectedState{
+
+}
+
+class HasMoneyState{
+    -scheduler: ScheduledExecutorService
+}
+
+
+IdleState ..|> VendingMachineState
+ItemSelectedState ..|> VendingMachineState
+HasMoneyState ..|> VendingMachineState
+
+
+enum Coin {
+    ONE(1)
+    TWO(2)
+    FIVE(5)
+    TEN(10)
+
+    - value : int
+
+    ~ Coin(value : int)
+    + getValue() : int
+}
+
+enum MachineStatus{
+    IDLE
+    ITEM_SELECTED
+    DISPENSING
+}
+
+
+VendingMachineState <-- MachineStatus
+
+interface VendingMachineObserver{
+    void onEvent(vendingMachine:VendingMachine)
+}
+
+
+interface VendingMachineSubject{
+    + notifyAll() : void
+    + addSubscriber(VendingMachineObserver observer) : void
+    + removeSubscriber(VendingMachineObserver observer) : void
+}
+
+
+
+class DisplayPanel{
+}
+
+DisplayPanel ..|> VendingMachineObserver
+
+VendingMachine ..|> VendingMachineSubject
+
+VendingMachineDemo --> VendingMachine
+
+@enduml

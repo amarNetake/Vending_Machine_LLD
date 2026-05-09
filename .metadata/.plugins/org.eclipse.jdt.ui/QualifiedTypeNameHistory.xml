@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="enums.MachineStatus"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
+    <fullyQualifiedTypeName name="entities.VendingMachine"/>
+    <fullyQualifiedTypeName name="entities.Item.Builder"/>
+</qualifiedTypeNameHistroy>

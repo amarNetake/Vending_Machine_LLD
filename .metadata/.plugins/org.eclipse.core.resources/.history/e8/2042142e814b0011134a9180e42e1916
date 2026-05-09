@@ -1,0 +1,8 @@
+package enums;
+
+public enum MachineStatus {
+	IDLE,
+	ITEM_SELECTED_STATE,
+	HAS_MONEY_STATE,
+	ITEM_DISPENSING_STATE,
+}

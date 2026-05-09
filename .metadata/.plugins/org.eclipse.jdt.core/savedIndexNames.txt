@@ -1,0 +1,4 @@
+INDEX VERSION 1.134+D:\System Design\1. Low Level Design\6_MySolutions_LLD\2_VendingMachine\my_Vending_Machine_LLD_Solution\.metadata\.plugins\org.eclipse.jdt.core
+3413270776.index
+1865797976.index
+2267280143.index

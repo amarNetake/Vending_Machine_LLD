@@ -1,0 +1,28 @@
+package client;
+
+import entities.Item;
+import entities.Slot;
+import entities.VendingMachine;
+
+public class VendingMachineDemo {
+	public static void main(String[] args) {
+		VendingMachine vendingMachine = VendingMachine.getInstance();
+		
+		Item item = new Item.Builder("COKE")
+							.itemId("102")
+							.cost(12)
+							.build();
+		
+		Slot slot = new Slot.Builder(10)
+							.slotId("34")
+							.item(item)
+							.quantity(0)
+							.build();
+		
+		vendingMachine.addSlot(slot);
+		
+		vendingMachine.getInventory().restock("34", 5);
+		
+		
+	}
+}

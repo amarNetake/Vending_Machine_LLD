@@ -1,0 +1,63 @@
+package states;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import entities.VendingMachine;
+import enums.Coin;
+import enums.MachineStatus;
+
+public class HasMoneyState implements VendingMachineState {
+	
+	ScheduledExecutorService scheduler;
+	
+	public HasMoneyState() {
+		 this.scheduler = Executors.newSingleThreadScheduledExecutor();
+	}
+
+	@Override
+	public void selectItem(VendingMachine vendingMachine, String slotId) {
+		System.out.println("Item has already been selected. To re-select cancel this transaction first...");
+
+	}
+
+	@Override
+	public void insertAmount(VendingMachine vendingMachine, Coin coin) {
+		System.out.println("Required amount was already received...");
+		System.out.println("Please press dispense to proceed with transaction or Cancel to cancel the transaction...");
+		vendingMachine.setBalance(vendingMachine.getBalance() + coin.getValue());
+	}
+
+	@Override
+	public void dispenseItem(VendingMachine vendingMachine) {
+		System.out.println("Dispensing item, please wait...");
+		scheduler.schedule(()->{
+			System.out.println("DISPENSED ITEM : %s".formatted(vendingMachine.getSelectedItem()));
+			if(vendingMachine.getBalance() > vendingMachine.getSelectedItem().getCost()) {
+				System.out.println("Please collect the refunded change %d INR".formatted(vendingMachine.getBalance() - vendingMachine.getSelectedItem().getCost()));
+			}
+			vendingMachine.setBalance(0);
+			vendingMachine.setSelectedItem(null);
+			scheduler.shutdown();
+			try {
+				scheduler.awaitTermination(5, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			vendingMachine.setState(new IdleState());
+		}, 5, TimeUnit.SECONDS);
+		
+	}
+
+	@Override
+	public void cancelTransaction(VendingMachine vendingMachine) {
+		System.out.println("Dispensing is in progress... Cannot cancel the transaction now...");
+	}
+
+	@Override
+	public MachineStatus getStatus() {
+		return MachineStatus.ITEM_DISPENSING;
+	}
+
+}

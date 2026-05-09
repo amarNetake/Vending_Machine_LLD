@@ -1,0 +1,44 @@
+package states;
+
+import entities.VendingMachine;
+import enums.Coin;
+import enums.MachineStatus;
+
+public class HasMoneyState implements VendingMachineState {
+
+	@Override
+	public void selectItem(VendingMachine vendingMachine, String slotId) {
+		System.out.println("Item has already been selected. To re-select cancel this transaction first...");
+
+	}
+
+	@Override
+	public void insertAmount(VendingMachine vendingMachine, Coin coin) {
+		System.out.println("Required amount was already received...");
+		System.out.println("Please press dispense to proceed with transaction or Cancel to cancel the transaction...");
+		vendingMachine.setBalance(vendingMachine.getBalance() + coin.getValue());
+	}
+
+	@Override
+	public void dispenseItem(VendingMachine vendingMachine) {
+		vendingMachine.setState(new ItemDispensingState());
+	}
+
+	@Override
+	public void cancelTransaction(VendingMachine vendingMachine) {
+		if(vendingMachine.getBalance() > 0) {
+			System.out.println("Refunding amount %d".formatted(vendingMachine.getBalance()));
+			vendingMachine.setBalance(0);
+		}
+		vendingMachine.setSelectedItem(null);
+		vendingMachine.setState(new IdleState());
+
+	}
+
+	@Override
+	public MachineStatus getStatus() {
+		return MachineStatus.HAS_MONEY_STATE;
+
+	}
+
+}

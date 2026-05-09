@@ -1,0 +1,44 @@
+package entities;
+
+import java.util.List;
+
+import observers.VendingMachineObserver;
+import observers.VendingMachineSubject;
+
+public class VendingMachine implements VendingMachineSubject{
+	
+	private Inventory inventory = new Inventory();
+	private List<VendingMachineObserver> observers;
+	private static VendingMachine vendingMachine;
+	
+	private VendingMachine() {}
+	
+	public static VendingMachine getInstance() {
+		if(vendingMachine==null) {
+			synchronized(VendingMachine.class) {
+				if(vendingMachine==null) {
+					vendingMachine = new VendingMachine();
+				}
+			}
+		}
+		return vendingMachine;
+	}
+
+	@Override
+	public void addObserver(VendingMachineObserver observer) {
+		if(!observers.contains(observer)) observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(VendingMachineObserver observer) {
+		if(observers.contains(observer)) observers.remove(observer);
+		
+	}
+	@Override
+	public void notifyAllObservers() {
+		for(VendingMachineObserver observer: observers) {
+			observer.onEvent(this);
+		}
+		
+	}
+}

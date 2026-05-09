@@ -1,0 +1,13 @@
+package observers;
+
+import entities.VendingMachine;
+
+public class DisplayPanel implements VendingMachineObserver {
+
+	@Override
+	public void onEvent(VendingMachine vendingMachine) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

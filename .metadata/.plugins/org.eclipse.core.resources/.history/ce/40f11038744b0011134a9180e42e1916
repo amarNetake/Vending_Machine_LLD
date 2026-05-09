@@ -1,0 +1,73 @@
+package entities;
+
+public class Slot {
+	
+	private final String slotId;
+	private Item item;
+	private final int capacity;
+	private int quantity;
+	
+	public Slot(Builder builder) {
+		this.slotId = builder.slotId;
+		this.item = builder.item;
+		this.capacity = builder.capacity;
+		this.quantity = builder.quantity;
+	}
+	
+	public static class Builder{
+		
+		private String slotId = java.util.UUID.randomUUID().toString();
+		private Item item;
+		private final int capacity;
+		private int quantity;
+		
+		public Builder(int capacity) {
+			this.capacity = capacity;
+		}
+		
+		public Builder slotId(String slotId) {
+			this.slotId = slotId;
+			return this;
+		}
+		
+		public Builder item(Item item) {
+			this.item = item;
+			return this;
+		}
+		
+		public Builder quantity(int quantity) {
+			this.quantity = quantity;
+			return this;
+		}
+	
+		public Slot build() {
+			return new Slot(this);
+		}
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getSlotId() {
+		return slotId;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+	
+	
+}

@@ -1,0 +1,39 @@
+package states;
+
+import entities.VendingMachine;
+import enums.Coin;
+import enums.MachineStatus;
+
+public class ItemDispensingState implements VendingMachineState{
+
+	@Override
+	public void selectItem(VendingMachine vendingMachine, String slotId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void insertAmount(VendingMachine vendingMachine, Coin coin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispenseItem(VendingMachine vendingMachine) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cancelTransaction(VendingMachine vendingMachine) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public MachineStatus getStatus() {
+		return MachineStatus.ITEM_DISPENSING_STATE;
+		
+	}
+
+}

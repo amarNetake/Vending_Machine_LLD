@@ -34,11 +34,11 @@ public class VendingMachine implements VendingMachineSubject{
 	}
 	
 	public void addSlot(Slot slot) {
-		this.getInventory().addSlot(slot);
+		vendingMachine.getInventory().addSlot(slot);
 	}
 	
 	public void setState(VendingMachineState nextState) {
-		this.setCurrentState(nextState);
+		vendingMachine.setCurrentState(nextState);
 	}
 	
 	public void selectItem(String slotId) {
@@ -60,17 +60,17 @@ public class VendingMachine implements VendingMachineSubject{
 
 	@Override
 	public void addObserver(VendingMachineObserver observer) {
-		if(!this.getObservers().contains(observer)) this.getObservers().add(observer);
+		if(!vendingMachine.getObservers().contains(observer)) vendingMachine.getObservers().add(observer);
 	}
 
 	@Override
 	public void removeObserver(VendingMachineObserver observer) {
-		if(this.getObservers().contains(observer)) this.getObservers().remove(observer);	
+		if(vendingMachine.getObservers().contains(observer)) vendingMachine.getObservers().remove(observer);
+		
 	}
-	
 	@Override
 	public void notifyAllObservers() {
-		for(VendingMachineObserver observer: observers) {
+		for(VendingMachineObserver observer: vendingMachine.observers) {
 			observer.onEvent(vendingMachine);
 		}
 		
@@ -81,11 +81,11 @@ public class VendingMachine implements VendingMachineSubject{
 	}
 	
 	public boolean isAvailable(String slotId) {
-		return this.getInventory().isItemAvailable(slotId);
+		return vendingMachine.getInventory().isItemAvailable(slotId);
 	}
 
 	public void setInventory(Inventory inventory) {
-		this.inventory = inventory;
+		vendingMachine.inventory = inventory;
 	}
 
 	public List<VendingMachineObserver> getObservers() {
@@ -93,20 +93,23 @@ public class VendingMachine implements VendingMachineSubject{
 	}
 
 	public void setObservers(List<VendingMachineObserver> observers) {
-		this.observers = observers;
+		vendingMachine.observers = observers;
 	}
 
 	public static VendingMachine getVendingMachine() {
 		return vendingMachine;
 	}
 
+	public static void setVendingMachine(VendingMachine vendingMachine) {
+		VendingMachine.vendingMachine = vendingMachine;
+	}
 
 	public VendingMachineState getCurrentState() {
 		return currentState;
 	}
 
 	public void setCurrentState(VendingMachineState currentState) {
-		this.currentState = currentState;
+		vendingMachine.currentState = currentState;
 	}
 
 	public int getBalance() {
@@ -114,7 +117,7 @@ public class VendingMachine implements VendingMachineSubject{
 	}
 
 	public void setBalance(int balance) {
-		this.balance = balance;
+		vendingMachine.balance = balance;
 	}
 
 	public Item getSelectedItem() {
@@ -122,7 +125,7 @@ public class VendingMachine implements VendingMachineSubject{
 	}
 
 	public void setSelectedItem(Item selectedItem) {
-		this.selectedItem = selectedItem;
+		vendingMachine.selectedItem = selectedItem;
 	}
 	
 	
